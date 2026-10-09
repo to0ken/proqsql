@@ -1,6 +1,7 @@
+using AcademyApp.data;
+using AcademyApp.model;
 using System;
 using System.Data.SqlClient;
-using AcademyApp.data;
 
 namespace AcademyApp
 {
@@ -12,6 +13,8 @@ namespace AcademyApp
                 "TrustServerCertificate=True";
 
         static Studentrepos student_repo = new Studentrepos(connection_string);
+
+        static Grouprepos group_repo= new Grouprepos(connection_string);
         static void Main(string[] args)
         {
 
@@ -22,6 +25,9 @@ namespace AcademyApp
             while (is_running)
             {
                 Console.WriteLine("1. Просмотр всех студентов");
+                Console.WriteLine("2. Просмотр всех студентов по iD");
+                Console.WriteLine("3. Просмотр все группы");
+
                 Console.WriteLine("0. Выход");
                 Console.Write("Введите номер действия: ");
                 string choise = Console.ReadLine();
@@ -31,12 +37,16 @@ namespace AcademyApp
                     case "1":
                         ShowAllStudent();
                         break;
-                    case "0":
-
+                    case "2":
+                        ShowAllStudentsById();
                         break;
 
                     case "3":
-                        ShowAllStudents();
+                        ShowAllGroup();
+                        break;
+
+                    case "0":
+                        is_running = false;
                         break;
                     default:
                         Console.WriteLine("Неверный ввод. Введите 1 или 0.");
@@ -54,9 +64,37 @@ namespace AcademyApp
 
         static void ShowAllStudent()
         {
-            var student = student_repo.FindAllStudents();
+            var students = student_repo.FindAllStudents();
+            foreach (var student in students) {
+                Console.WriteLine(student);
+            
+            }
+        }
+
+        static void ShowAllGroup()
+        {
+            var groups = group_repo.FindAllGroup();
+            foreach (var group in groups)
+            {
+                Console.WriteLine(group);
+
+            }
         }
          
-        static void ShowAllStudents() { }
+        static void ShowAllStudentsById() 
+        {
+            Console.WriteLine("введите номер студениа");
+            string choice = Console.ReadLine();
+            var student = student_repo.FindStudentBeId(choice);
+            Console.WriteLine(student);
+        }
+
+        /*static void ShowAllGroupById()
+        {
+            Console.WriteLine("введите номер группы");
+            string choice = Console.ReadLine();
+            var student = group_repo.FundGroupBeId(choice);
+            Console.WriteLine(group);
+        }*/
     }
 }
